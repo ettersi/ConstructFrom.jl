@@ -31,6 +31,12 @@ julia> vec
   data::Vector{Int} = construct_from()
   ```
 
+- When providing a default value for dictionary lookups.
+  ```julia
+  dict = Dict{Int, Vector{Int}}()
+  get(dict, 42, construct_from())
+  ```
+
 ---
 
 **Note.** `construct_from()` exploits that Julia inserts an implicit `convert()` in many circumstances. (Most prominently, `a::T = b` is syntactic sugar for `a = typeassert(convert(T, b), T)`.) Correspondingly, `construct_from()` fails in cases where there is no conversion, or the conversion happens too late.
@@ -45,7 +51,7 @@ julia> vec
   ERROR: MethodError: no method matching foo(::ConstructFrom.Arguments{...})
 
   julia> # Let's add the conversion ourselves
-         foo(data) = convert(Vector{Int}, data);
+         foo(data) = foo(convert(Vector{Int}, data));
 
   julia> # Now it works
          foo(construct_from())
